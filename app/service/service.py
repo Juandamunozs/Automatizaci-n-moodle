@@ -76,12 +76,10 @@ def tareas_pendientes(user, password, driver, email):
     except Exception as e:
             print(f"Error al dar click a acceder {e}")
 
-    driver.execute_script("document.body.style.zoom='67%'")
+    driver.execute_script("document.body.style.zoom='60%'")
 
     tabla_elemento = driver.find_element(By.CSS_SELECTOR, ".calendarmonth.calendartable.mb-0")
     driver.execute_script("arguments[0].scrollIntoView();", tabla_elemento)
-
-    time.sleep(2)
 
     screenshot_path = os.path.join(dir_screenshot, "screenshot.png")
     driver.save_screenshot(screenshot_path)

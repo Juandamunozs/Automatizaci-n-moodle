@@ -1,8 +1,9 @@
 import re
 import datetime
 import calendar
+from module.time.time import dias_festivos_colombia, obtener_dia_texto, obtener_dia_numero
 
-def obtener_dia_del_mes(dia_del_mes):
+def obtener_dia(dia_del_mes):
     dia_del_mes = int(dia_del_mes)
     fecha_actual = datetime.datetime.now().date()
     fecha_dia = datetime.date(fecha_actual.year, fecha_actual.month, dia_del_mes) 
@@ -31,7 +32,6 @@ def obtener_dia_del_mes(dia_del_mes):
         tiempo_entrega = f"Venció hace {dias_faltantes} días la entrega de esta actividad."
     
     return dia_semana_espanol, tiempo_entrega
-
 
 def calendario_moodle(text):
     # Reemplazar '📅' por saltos de línea, para separar las fechas en nuevas líneas
@@ -72,7 +72,7 @@ def calendario_moodle(text):
         if numero_encontrado:
             dia_del_mes = int(numero_encontrado.group())
             if 1 <= dia_del_mes <= num_dias_mes:
-                dia_semana_espanol, tiempo_entrega = obtener_dia_del_mes(dia_del_mes)
+                dia_semana_espanol, tiempo_entrega = obtener_dia(dia_del_mes)
                 actividades_con.append((dia_del_mes, dia_semana_espanol, tiempo_entrega, linea))
                 if dia_del_mes in dias_del_mes:
                     dias_del_mes.remove(dia_del_mes)
@@ -82,14 +82,29 @@ def calendario_moodle(text):
     calendario = ""  
 
     for dia in range(1, num_dias_mes + 1):
-        actividad_encontrada = False
+        festivo = dias_festivos_colombia(dia)
+        actividad_encontrada = False  
+
+        if dia == obtener_dia_numero():
+            calendario += f" <-------------- Día actual {chr(0x231a)} -------------->\n"
+
         for actividad in actividades_con:
             if actividad[0] == dia:
-                calendario += f"✦ {actividad[1]} {actividad[0]} - {actividad[2]} - {actividad[3]}\n"
+                if festivo: 
+                    calendario += f"✦ {actividad[1]} {actividad[0]} - {festivo} - {actividad[2]} - {actividad[3]}\n"
+                else:
+                    calendario += f"✦ {actividad[1]} {actividad[0]} - {actividad[2]} - {actividad[3]}\n"
                 actividad_encontrada = True
-                break
+                break  
+
         if not actividad_encontrada:
-            dia_semana_espanol, tiempo_entrega = obtener_dia_del_mes(dia)
-            calendario += f"☆ {dia_semana_espanol} {dia} - Día sin actividades.\n"
+            dia_semana_espanol = obtener_dia_texto(dia) 
+            if festivo:  
+                calendario += f"☆ {dia_semana_espanol} {dia} - {festivo} - Día sin actividades.\n"
+            else:
+                calendario += f"☆ {dia_semana_espanol} {dia} - Día sin actividades.\n"
+        
+        if dia == obtener_dia_numero():
+            calendario += f" <------------------------------------------------------>\n"
 
     return calendario

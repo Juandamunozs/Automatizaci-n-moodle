@@ -6,13 +6,15 @@ from module.email.modulo_correo.plantilla import cuerpo_html
 from env.env import dir_logo, dir_img_calendar
 from env.env2 import user_email, password_email
 import os
+from module.time.time import obtener_mes_texto
 
 def send_email(tareas_pendientes, email):
-    
+
     # Datos del correo Destinatario
-    to_email = ["soporte@gmail.com", email]  
+    #to_email = ["soporte@gmail.com", email]
+    to_email = [email]  
     subject = "Tareas pendientes"
-    body = "El calendario de moodle para este mes es: "
+    body = f"El calendario de moodle para el mes de {obtener_mes_texto()} "
 
     # Datos del correo Remitente
     from_email = user_email
