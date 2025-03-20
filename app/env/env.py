@@ -17,3 +17,4 @@ dir_chromedriver = r"C:\\selenium\\chromedriver.exe"
 dir_logo = os.path.join(dir_assets, 'image', 'logo.jpeg')
 dir_screenshot = os.path.join(dir_assets, 'screenshots')
 dir_img_calendar = os.path.join(dir_assets, 'screenshots', 'screenshot.png')
+dir_pdf = os.path.join(dir_module, 'pdf', "tareas_pendientes.pdf")

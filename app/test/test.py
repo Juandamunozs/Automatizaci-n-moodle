@@ -125,11 +125,125 @@
 
 # eventos(text)
 
-from datetime import datetime
+# from datetime import datetime
 
 
-meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+# meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
-mes_actual = meses[datetime.now().month - 1]
+# mes_actual = meses[datetime.now().month - 1]
 
-print(mes_actual)
+# print(mes_actual)
+
+# import datetime
+
+# texto = """
+
+# ☆ Sábado 1 - Día sin actividades.\n✦ Domingo 2 - Venció hace 10 días la entrega de esta actividad. -  2 Se:     cierra Actividad\n✦ Lunes 3 - Venció hace 9 días la entrega de esta actividad. -  3 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n✦ Martes 4 - Venció hace 8 días la entrega de esta actividad. -  4 Ecuaciones:     más Asistencia a sesión sincrónica Se abre Actividad No.     más Se cierra Actividad No.\n☆ Miércoles 5 - Día sin actividades.\n☆ Jueves 6 - Día sin actividades.\n✦ Viernes 7 - Venció hace 5 días la entrega de esta actividad. -  7 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n☆ Sábado 8 - Día sin actividades.\n☆ Domingo 9 - Día sin actividades.\n✦ Lunes 10 - Venció hace 2 días la entrega de esta actividad. -  10 Asistencia:     a sesión sincrónica Se abre Actividad No.\n☆ Martes 11 - Día sin actividades.\n <-------------- Día actual ⌚ -------------->\n☆ Miércoles 12 - Día sin actividades.\n <------------------------------------------------------>\n☆ Jueves 13 - Día sin actividades.\n✦ Viernes 14 - Faltan 2 días para la entrega de esta actividad. -  14 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n✦ Sábado 15 - Faltan 3 días para la entrega de esta actividad. -  15 Se:     cierra Actividad No. 3: Aprendiendo Álgebra Vencimiento de Actividad No.3: Mapa conceptual: herramientas digitales y redes sociales para el aprendizaje Vencimiento de Actividad 4: Encuesta. ¿Qué tan buena es su administración del tiempo? Vencimiento de Actividad 5: Relaciones significativas más Se cierra Actividad No. 3: Aprendiendo Álgebra Vencimiento de Actividad No.3: Mapa conceptual: herramientas digitales y redes sociales para el aprendizaje Vencimiento de Actividad 4: Encuesta. ¿Qué tan buena es su administración del tiempo? Vencimiento de Actividad 5: Relaciones significativas\n✦ Domingo 16 - Faltan 4 días para la entrega de esta actividad. -  16 Se:     cierra Actividad No.\n✦ Lunes 17 - Faltan 5 días para la entrega de esta actividad. -  17 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n☆ Martes 18 - Día sin actividades.\n☆ Miércoles 19 - Día sin actividades.\n☆ Jueves 20 - Día sin actividades.\n✦ Viernes 21 - Faltan 9 días para la entrega de esta actividad. -  21 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n☆ Sábado 22 - Día sin actividades.\n☆ Domingo 23 - Día sin actividades.\n✦ Lunes 24 - Dia festivo debido a Día de San José (observado) - Faltan 12 días para la entrega de esta actividad. -  24 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n☆ Martes 25 - Día sin actividades.\n✦ Miércoles 26 - Faltan 14 días para la entrega de esta actividad. -  26 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n☆ Jueves 27 - Día sin actividades.\n✦ Viernes 28 - Faltan 16 días para la entrega de esta actividad. -  28 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n☆ Sábado 29 - Día sin actividades.\n☆ Domingo 30 - Día sin actividades.\n✦ Lunes 31 - Faltan 19 días para la entrega de esta actividad. -  31 Asistencia:     a sesión sincrónica más Asistencia a sesión sincrónica\n
+
+# """
+
+
+# # Función para obtener el día en número (siempre el día actual)
+# def obtener_dia_numero():
+#     return datetime.datetime.now().day
+
+# dia_actual = obtener_dia_numero()
+# print(dia_actual)
+
+
+# # Dividimos el texto por saltos de línea y eliminamos las cadenas vacías
+# calendarios_mes = [linea for linea in texto.split('\n') if linea != ""]
+
+# # Inicializamos una variable para las filas del calendario
+# filas_calendario = ""
+# fila_proxima_tarea = ""
+# tarea_asignada = False
+# contador_proxima_tarea = dia_actual
+
+# # # Iteramos sobre los días del mes con un contador
+# for contador, dia_mes in enumerate(calendarios_mes, start=1):  
+#         if "Día sin actividades" in dia_mes:
+#             dia_mes = dia_mes.replace("Día sin actividades", "Día sin actividades")
+#         else:
+#             dia_mes = f"<strong>{dia_mes}</strong>"
+
+#         if contador < dia_actual:
+#             estilo = "style='background-color: #fafafa; color: #000000; border: 1px solid #e0e0e0;'"
+#         elif contador == dia_actual:
+#             dia_mes = f"{dia_mes} - <strong>(¡Hoy!)</strong>"
+#             estilo = "style='background-color: #f0faff; color: #000000; border: 1px solid #a3c4f7;'"
+#         else:
+#             estilo = "style='background-color: #f7fff7; color: #000000; border: 1px solid #b7e1b1;'"
+
+#         if not tarea_asignada and contador >= contador_proxima_tarea and "Día sin actividades" not in dia_mes:
+#             fila_proxima_tarea += f"""
+#             <tr {estilo}>
+#                 <td>{dia_mes}</td>
+#             </tr>
+#             """
+#             tarea_asignada = True  
+
+#         filas_calendario += f"""
+#         <tr {estilo}>
+#             <td>{dia_mes}</td>
+#         </tr>
+#         """
+
+# print(f"Proxima tareas {fila_proxima_tarea}")
+
+
+
+# # Imprimimos el HTML resultante con un diseño más profesional
+# print(f"""
+# <!DOCTYPE html>
+# <html lang="es">
+# <head>
+#     <meta charset="UTF-8">
+#     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#     <title>Calendario de Actividades</title>
+#     <style>
+#         body {{
+#             font-family: Arial, sans-serif;
+#             background-color: #f4f4f9;
+#             margin: 0;
+#             padding: 0;
+#         }}
+#         table {{
+#             width: 80%;
+#             margin: 30px auto;
+#             border-collapse: collapse;
+#             background-color: white;
+#         }}
+#         th, td {{
+#             padding: 10px;
+#             text-align: left;
+#         }}
+#         th {{
+#             background-color: #34495e;
+#             color: white;
+#         }}
+#         tr:nth-child(odd) {{
+#             background-color: #f9f9f9;
+#         }}
+#         tr:nth-child(even) {{
+#             background-color: #f1f1f1;
+#         }}
+#         td {{
+#             border: 1px solid #ddd;
+#         }}
+#     </style>
+# </head>
+# <body>
+#     <table>
+#         <thead>
+#             <tr>
+#                 <th>Día</th>
+#             </tr>
+#         </thead>
+#         <tbody>
+#             {filas_calendario}
+#         </tbody>
+#     </table>
+# </body>
+# </html>
+# """)

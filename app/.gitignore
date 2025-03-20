@@ -195,3 +195,4 @@ assets/image/*
 
 # Ignorar el contenido dentro de 'app/assets/screenshot/' pero no la carpeta
 assets/screenshots/*
+module/pdf/tareas_pendientes.pdf

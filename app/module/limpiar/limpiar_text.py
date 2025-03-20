@@ -85,8 +85,8 @@ def calendario_moodle(text):
         festivo = dias_festivos_colombia(dia)
         actividad_encontrada = False  
 
-        if dia == obtener_dia_numero():
-            calendario += f" <-------------- Día actual {chr(0x231a)} -------------->\n"
+        # if dia == obtener_dia_numero():
+        #     calendario += f" <-------------- Día actual {chr(0x231a)} -------------->\n"
 
         for actividad in actividades_con:
             if actividad[0] == dia:
@@ -104,7 +104,7 @@ def calendario_moodle(text):
             else:
                 calendario += f"☆ {dia_semana_espanol} {dia} - Día sin actividades.\n"
         
-        if dia == obtener_dia_numero():
-            calendario += f" <------------------------------------------------------>\n"
+        # if dia == obtener_dia_numero():
+        #     calendario += f" <------------------------------------------------------>\n"
 
     return calendario

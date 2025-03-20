@@ -11,6 +11,14 @@ def obtener_mes_texto():
 def obtener_mes_numero():
     return datetime.datetime.now().month
 
+# Función obtener hora completa
+def obtener_hora_completa():
+    ahora = datetime.datetime.now()
+    hora = ahora.hour
+    minuto = ahora.minute
+    segundo = ahora.second
+    return f"{hora:02}:{minuto:02}:{segundo:02}"
+
 # Función para obtener el año actual
 def obtener_anio():
     return datetime.datetime.now().year

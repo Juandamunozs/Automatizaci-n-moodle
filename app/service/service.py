@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from env.env import dir_chromedriver, dir_screenshot
 from module.email.modulo_correo.email import send_email
+from module.pdf.pdfService import crear_pdf
 from module.limpiar.limpiar_text import calendario_moodle
 import time
 
@@ -37,7 +38,70 @@ def investigar_tareas(user, password, email):
     except Exception as e:
         driver.quit() 
         print("Error al abrir el navegador: ", e)
+        return "Las credenciales son incorrectas o el controlador de Chrome no se abrió correctamente."
 
+def calificaciones(driver):
+    try:
+        # Hacer clic en el perfil de usuario
+        script_perfil = """
+            let btn = document.querySelector('.btn.dropdown-toggle.ccn-profile-menu');
+            if (btn) {
+                btn.click();
+            }
+        """
+        driver.execute_script(script_perfil)
+        print("Perfil abierto correctamente.")
+    except Exception as e:
+        print(f"Error al dar clic en el perfil de usuario: {e}")
+    
+    try:
+        # Hacer clic en la opción de Calificaciones
+        script_calificacion = """
+            let items = document.querySelectorAll(".dropdown-item");
+            let calificacionesItem = Array.from(items).find(
+                (item) => item.textContent.trim() === "Calificaciones"
+            );
+
+            if (calificacionesItem) {
+                calificacionesItem.click();
+            }
+        """
+        driver.execute_script(script_calificacion)
+        print("Se hizo clic en 'Calificaciones'.")
+    except Exception as e:
+        print(f"Error al dar clic en 'Calificaciones': {e}")
+
+    try:
+        # Esperar a que la tabla de calificaciones esté presente
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "#overview-grade tbody tr"))
+        )
+
+        # Obtener las calificaciones
+        script_cursos_calificacion = """
+            const filas = document.querySelectorAll("#overview-grade tbody tr");
+            const calificaciones = [];
+
+            filas.forEach(fila => {
+                const nombreCurso = fila.querySelector("td:nth-child(1) a")?.textContent.trim();
+                const calificacion = fila.querySelector("td:nth-child(2)")?.textContent.trim();
+
+                if (nombreCurso && calificacion) {
+                    calificaciones.push({ curso: nombreCurso, nota: calificacion });
+                }
+            });
+
+            return calificaciones;
+        """
+        calificaciones = driver.execute_script(script_cursos_calificacion)
+        print("Calificaciones obtenidas correctamente.")
+        return calificaciones  
+    
+    except Exception as e:
+        print(f"Error al obtener la tabla de calificaciones: {e}")
+        return []
+
+     
 def tareas_pendientes(user, password, driver, email):
 
     try:
@@ -80,6 +144,8 @@ def tareas_pendientes(user, password, driver, email):
 
     tabla_elemento = driver.find_element(By.CSS_SELECTOR, ".calendarmonth.calendartable.mb-0")
     driver.execute_script("arguments[0].scrollIntoView();", tabla_elemento)
+
+    time.sleep(1)
 
     screenshot_path = os.path.join(dir_screenshot, "screenshot.png")
     driver.save_screenshot(screenshot_path)
@@ -142,7 +208,9 @@ def tareas_pendientes(user, password, driver, email):
         tareas_pendientes_calendario = tareas_pendientes_calendario.replace("\n", "")
         tareas_pendientes_calendario = calendario_moodle(tareas_pendientes_calendario)
         tareas_pendientes_calendario = tareas_pendientes_calendario.replace("➤", "")
-        send_email(tareas_pendientes_calendario, email)
+        calificaciones_materias = calificaciones(driver)
+        crear_pdf(tareas_pendientes_calendario, email, calificaciones_materias)
+        send_email(tareas_pendientes_calendario, email, calificaciones_materias)
 
     except:
         tareas_pendientes_calendario = WebDriverWait(driver, 10).until(
@@ -151,5 +219,10 @@ def tareas_pendientes(user, password, driver, email):
 
         mensaje_error = tareas_pendientes_calendario.text
         return {"mensaje_error": mensaje_error}
+    
+    calendarios_mes = [linea for linea in tareas_pendientes_calendario.split('\n') if linea != ""]
 
-    return {"tarea_pendiente", tareas_pendientes_calendario}
+    return {
+        "calificaciones": calificaciones_materias,
+        "tarea_pendiente": calendarios_mes
+}

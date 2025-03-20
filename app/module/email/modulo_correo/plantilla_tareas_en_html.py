@@ -1,6 +1,52 @@
 from module.time.time import obtener_mes_texto, obtener_dia_numero
 
 def cuerpo_html(subject, body, tareas_pendientes, calificaciones):
+    dia_actual = obtener_dia_numero()
+    mes = obtener_mes_texto()
+
+    # Crear las filas de la tabla para las calificaciones
+    filas_calificaciones = ""
+    for calificacion in calificaciones:
+        filas_calificaciones += f"""
+        <tr>
+            <td>{calificacion['curso']}</td>
+            <td>{calificacion['nota']}</td>
+        </tr>
+        """
+    # Dividimos el texto por saltos de línea y eliminamos las cadenas vacías
+    calendarios_mes = [linea for linea in tareas_pendientes.split('\n') if linea != ""]
+
+    filas_calendario = ""
+    fila_proxima_tarea = ""
+    tarea_asignada = False
+
+    for contador, dia_mes in enumerate(calendarios_mes, start=1):  
+        if "Día sin actividades" in dia_mes:
+            dia_mes = dia_mes.replace("Día sin actividades", "Día sin actividades")
+        else:
+            dia_mes = f"<strong>{dia_mes}</strong>"
+
+        if contador < dia_actual:
+            estilo = "style='background-color: #fafafa; color: #000000; border: 1px solid #e0e0e0;'"
+        elif contador == dia_actual:
+            dia_mes = f"{dia_mes} - <strong>(¡Hoy!)</strong>"
+            estilo = "style='background-color: #f0faff; color: #000000; border: 1px solid #a3c4f7;'"
+        else:
+            estilo = "style='background-color: #f7fff7; color: #000000; border: 1px solid #b7e1b1;'"
+
+        if not tarea_asignada and contador >= dia_actual and "Día sin actividades" not in dia_mes:
+            fila_proxima_tarea += f"""
+            <tr {estilo}>
+                <td>{dia_mes}</td>
+            </tr>
+            """
+            tarea_asignada = True  
+
+        filas_calendario += f"""
+        <tr {estilo}>
+            <td>{dia_mes}</td>
+        </tr>
+        """
 
     return f"""
         <!DOCTYPE html>
@@ -121,6 +167,44 @@ def cuerpo_html(subject, body, tareas_pendientes, calificaciones):
             <div class="container">
                 <h1>{subject}</h1>
                 <p><strong>{body}</strong></p>
+
+                <h2>Calificaciones del semestre</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Curso</th>
+                            <th>Nota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filas_calificaciones}
+                    </tbody>
+                </table>
+
+                <h2>Proxima tarea a entregar</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Actividad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {fila_proxima_tarea}
+                    </tbody>
+                </table>
+
+                <h2>Calendario de {mes}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Actividades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filas_calendario}
+                    </tbody>
+                </table>
+
             </div>
         </body>
 

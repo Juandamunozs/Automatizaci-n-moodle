@@ -3,18 +3,17 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from module.email.modulo_correo.plantilla import cuerpo_html
-from env.env import dir_logo, dir_img_calendar
+from env.env import dir_logo, dir_img_calendar, dir_pdf
 from env.env2 import user_email, password_email
 import os
-from module.time.time import obtener_mes_texto
 
-def send_email(tareas_pendientes, email):
+def send_email(tareas_pendientes, email, calificaciones_materias):
 
     # Datos del correo Destinatario
     #to_email = ["soporte@gmail.com", email]
     to_email = [email]  
     subject = "Tareas pendientes"
-    body = f"El calendario de moodle para el mes de {obtener_mes_texto()} "
+    body = f"Adjunto en el PDF encontrará el PDF con el calendario"
 
     # Datos del correo Remitente
     from_email = user_email
@@ -30,22 +29,15 @@ def send_email(tareas_pendientes, email):
 
     # Lista de archivos a adjuntar
     files = [
-        dir_logo,
-        dir_img_calendar
+        # dir_logo,
+        dir_img_calendar,
+        dir_pdf
     ]
 
-    # Eliminar los emojis y caracteres innecesarios en tareas pendientes
-    # tareas_pendientes_calendario = tareas_pendientes.replace("📅", "").replace("➤", "").strip()
-    tareas_pendientes_calendario = tareas_pendientes.replace("\n", "<br><br>")
-
-    # # Eliminar texto repetido o innecesario
-    # tareas_pendientes_calendario = re.sub(r"(más|undefined|evento[s]?)", "", tareas_pendientes_calendario)
-
-    # # Asegurarse de que el texto se vea bien en HTML: Cambiar saltos de línea por <br> y dar formato
-    # tareas_pendientes_calendario = tareas_pendientes_calendario.replace("\n", "<br>").replace("  ", "&nbsp;&nbsp;")
+    tareas_pendientes_calendario = tareas_pendientes
 
     # Llamar a la función que genera la plantilla HTML
-    html_body = cuerpo_html(subject, body, tareas_pendientes_calendario)
+    html_body = cuerpo_html(subject, body, tareas_pendientes_calendario, calificaciones_materias)
     
     # Adjuntar el cuerpo HTML al mensaje
     message.attach(MIMEText(html_body, "html"))
